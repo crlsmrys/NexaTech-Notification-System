@@ -1,0 +1,26 @@
+{
+  "name": "nexatech-notification-server",
+  "version": "1.0.0",
+  "description": "Distributed Real-Time Notification System for NexaTech College",
+  "main": "server1.js",
+  "scripts": {
+    "start": "node server1.js",
+    "server1": "node server1.js",
+    "server2": "node server2.js",
+    "dev": "nodemon server1.js",
+    "install-all": "npm install"
+  },
+  "keywords": ["websocket", "real-time", "notification", "redis", "distributed"],
+  "author": "NexaTech Development Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.5.4",
+    "redis": "^4.6.5",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
