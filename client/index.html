@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexaTech Notification System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🎓 NexaTech Notification System</h1>
+                <p class="subtitle">Real-Time Communication for College Announcements</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Login Section -->
+            <div id="loginSection" class="section login-section">
+                <div class="form-card">
+                    <h2>Welcome to NexaTech</h2>
+                    <p class="form-subtitle">Join the real-time notification system</p>
+                    
+                    <div class="form-group">
+                        <label for="username">👤 Your Name</label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            placeholder="Enter your full name"
+                            maxlength="50"
+                        >
+                        <small id="usernameError" class="error-text"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="role">👨‍🏫 Select Your Role</label>
+                        <select id="role">
+                            <option value="">-- Choose Role --</option>
+                            <option value="Lecturer">👨‍🏫 Lecturer</option>
+                            <option value="Student">👨‍🎓 Student</option>
+                        </select>
+                        <small id="roleError" class="error-text"></small>
+                    </div>
+
+                    <button id="connectBtn" class="btn btn-primary btn-lg">
+                        🚀 Connect to System
+                    </button>
+
+                    <div id="connectionStatus" class="connection-status">
+                        <span class="status-dot disconnected"></span>
+                        <span>Not connected</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Section -->
+            <div id="chatSection" class="section chat-section" style="display: none;">
+                <div class="chat-container">
+                    <!-- Sidebar -->
+                    <aside class="sidebar">
+                        <!-- User Info -->
+                        <div class="user-info-card">
+                            <div class="user-header">
+                                <h3 id="displayName" class="user-name">User</h3>
+                                <span id="userRole" class="user-role-badge">Role</span>
+                            </div>
+                            <div class="user-meta">
+                                <small id="joinedTime">Joined: --:--</small>
+                            </div>
+                        </div>
+
+                        <!-- Server Info -->
+                        <div class="server-info-card">
+                            <h4>📡 Connected Server</h4>
+                            <div id="serverDisplay" class="server-display">
+                                <div class="server-indicator">
+                                    <span class="server-status-dot active"></span>
+                                    <span id="serverName">Connecting...</span>
+                                </div>
+                                <small id="serverPort">Port: --</small>
+                            </div>
+                        </div>
+
+                        <!-- Users Count -->
+                        <div class="stats-card">
+                            <h4>👥 Online Users (<span id="usersCount">0</span>)</h4>
+                            <ul id="usersList" class="users-list">
+                                <li class="no-users">Loading users...</li>
+                            </ul>
+                        </div>
+
+                        <!-- Disconnect Button -->
+                        <button id="disconnectBtn" class="btn btn-secondary btn-block">
+                            🔌 Disconnect
+                        </button>
+                    </aside>
+
+                    <!-- Main Chat Area -->
+                    <main class="chat-main">
+                        <!-- Messages Display -->
+                        <div id="messagesContainer" class="messages-container">
+                            <div class="message-placeholder">
+                                <p>📭 No messages yet</p>
+                                <small>Messages will appear here when sent</small>
+                            </div>
+                        </div>
+
+                        <!-- Message Input Area -->
+                        <div class="message-input-area">
+                            <!-- For Lecturers: Announcement Input -->
+                            <div id="lecturerPanel" class="input-panel" style="display: none;">
+                                <label class="panel-label">📢 Send Announcement</label>
+                                <textarea 
+                                    id="announcementInput" 
+                                    class="message-input"
+                                    placeholder="Type your announcement here... (Max 500 characters)"
+                                    maxlength="500"
+                                    rows="3"
+                                ></textarea>
+                                <div class="input-footer">
+                                    <span id="charCount" class="char-count">0/500</span>
+                                    <button id="sendAnnouncementBtn" class="btn btn-success">
+                                        ✉️ Send Announcement
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- For All: Response Input -->
+                            <div id="responsePanel" class="input-panel">
+                                <label class="panel-label">💬 Send Response/Acknowledgement</label>
+                                <textarea 
+                                    id="responseInput" 
+                                    class="message-input"
+                                    placeholder="Type your response here... (Max 300 characters)"
+                                    maxlength="300"
+                                    rows="2"
+                                ></textarea>
+                                <div class="input-footer">
+                                    <span id="responseCharCount" class="char-count">0/300</span>
+                                    <button id="sendResponseBtn" class="btn btn-success">
+                                        ✉️ Send Response
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>NexaTech Notification System © 2024 | Distributed Real-Time Communication</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="js/socket.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
