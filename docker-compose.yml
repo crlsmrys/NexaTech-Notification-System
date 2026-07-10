@@ -1,0 +1,105 @@
+version: '3.8'
+
+services:
+  # Redis - Message broker for inter-server communication
+  redis:
+    image: redis:7-alpine
+    container_name: nexatech-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - nexatech-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # Server 1 (Primary)
+  server1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nexatech-server1
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - SERVER_NAME=Server 1 (Primary)
+      - SERVER_PORT=3000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - nexatech-network
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    command: node server1.js
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Server 2 (Secondary)
+  server2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nexatech-server2
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - SERVER_NAME=Server 2 (Secondary)
+      - SERVER_PORT=3001
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - nexatech-network
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    command: node server2.js
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Nginx - Load Balancer & Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: nexatech-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./client:/usr/share/nginx/html:ro
+    depends_on:
+      - server1
+      - server2
+    networks:
+      - nexatech-network
+    restart: unless-stopped
+
+networks:
+  nexatech-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+    driver: local
